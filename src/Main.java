@@ -1,11 +1,8 @@
 public class Main {
     public static void main(String[] args) {
-        int[] arr={2,3,4,5,6};
-        //rev(0,arr.length-1,arr);
-        revSingle(0,arr);
-        for(int i:arr){
-            System.out.print(i+" ");
-        }
+       String str="MADAM";
+       boolean ans=isPalin(0,str);
+        System.out.println(ans);
     }
     //n factorial
     public static int fact(int n){
@@ -13,6 +10,18 @@ public class Main {
             return 1;
         }
         return n*fact(n-1);
+    }
+
+     //check if string is palindrome
+    public static boolean isPalin(int i,String s){
+        if(i>=s.length()/2){
+            return true;
+        }
+        if(s.charAt(i)!=s.charAt(s.length()-i-1)){
+            return false;
+        }
+        //move ahead
+        return isPalin(i+1,s);
     }
 
     //reversing an array using two pointers
