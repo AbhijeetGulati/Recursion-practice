@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class Main {
@@ -144,4 +146,188 @@ public class Main {
         int np=helpCount(i+1,n,sum,k,arr);
         return p+np;
     }
-}
+
+    //COMBINATION SUM
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> outer=new ArrayList<>();
+        helperCombo();
+    }
+    public void helperCombo(int i,int target,int[] candidates,List<Integer> inner,List<List<Integer>> outer){
+        //base case
+           if(i==candidates.length){
+            if(target==0) {
+                //reqd subsequence
+                //add inner list to outer this is our ans
+                outer.add(new ArrayList<>(inner));
+            }else{
+                return;
+            }
+        }//base case done
+
+        //pick
+
+
+            //pick it
+        if(candidates[i]<=target) {
+            inner.add(candidates[i]);
+
+            helperCombo(i, target - candidates[i], candidates, inner, outer);
+        }
+        //not pick
+        inner.remove(candidates[i]);
+        helperCombo(i+1,target,candidates,inner,outer);
+    }
+
+    //combination sum2
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        //sort array
+        Arrays.sort(candidates);
+      List<List<Integer>> outer=new ArrayList<>();
+      //recursion call
+        helpCombo2(0,target,candidates,outer,new ArrayList<>());
+        return outer;
+    }
+    public void helpCombo2(int ind,int target,int[] candidates,List<List<Integer>> outer,List<Integer> inner){
+        int n=candidates.length;
+        //base case
+        if(target==0){
+            //add current list to outer list and return
+            outer.add(new ArrayList<>(inner));
+            return;
+        }
+        for(int i=ind;i<n;i++){
+           //avoid duplicates
+            if(i>ind && candidates[i]==candidates[i-1]){
+                continue;//we have checked correct index and now if next element is same as current element we wont take it
+            }
+            if(candidates[i]>target){
+                break;
+            }
+            //pick
+            inner.add(candidates[i]);
+            helpCombo2(i+1,target-candidates[i],candidates,outer,inner);
+            inner.remove(inner.size()-1);//not pick
+        }
+
+    }
+
+    //subsets 2
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        HashSet<List<Integer>> set=new HashSet<>();
+        helpSet(0,set,new ArrayList<>(),nums);
+        List<List<Integer>> outer=new ArrayList<>(set);
+        return outer;
+    }
+    public void helpSet(int ind,HashSet<List<Integer>> set,List<Integer> inner,int[] nums){
+        //base case
+        if(ind==nums.length){
+            set.add(new ArrayList<>(inner));
+            return;
+        }
+        //pick and not pick
+        //pick
+        inner.add(nums[ind]);
+        helpSet(ind+1,set,inner,nums);
+        //not pick
+        inner.remove(inner.size()-1);
+        helpSet(ind+1,set,inner,nums);
+    }
+
+    //subset 1
+    ArrayList<Integer> subsetSums(ArrayList<Integer> arr, int N){
+        // code here
+        ArrayList<Integer> ans=new ArrayList<>();//to store sums of all subsets
+        sumHelper(0,0,arr,ans);
+        return ans;
+    }
+    public void sumHelper(int ind,int sum,ArrayList<Integer> arr,ArrayList<Integer> ans){
+        //base case
+        if(ind==arr.size()){
+            //put sum in ans
+            ans.add(sum);
+            return;
+        }
+
+        //pick and not pick
+        //pick
+
+        sumHelper(ind+1,sum+arr.get(ind),arr,ans);
+        //not pick
+
+        sumHelper(ind+1,sum,arr,ans);
+
+    }
+
+    //generate paranthesis
+    public List<String> generateParenthesis(int n) {
+    List<String> ans=new ArrayList<>();
+
+    }
+   //permutations
+    public List<List<Integer>> permute(int[] nums) {
+        int n=nums.length;
+     List<List<Integer>> outer=new ArrayList<>();
+     boolean[] check=new boolean[n];
+     Arrays.fill(check,false);
+     permuteHelp(nums,new ArrayList<>(),outer,check);
+     return outer;
+    }
+    public void permuteHelp(int[] nums,List<Integer> inner,List<List<Integer>> outer,boolean[] check){
+        int n=nums.length;
+        //base case
+        if(inner.size()==n){
+            //add inner arraylist to outer list and return
+            outer.add(new ArrayList<>(inner));
+            return;
+        }
+        //traverse entire nums array and then pick a value which isnt marked
+        for(int i=0;i<n;i++){
+            if(check[i]!=true){
+                //can select it
+                inner.add(nums[i]);
+                //mark in boolean array
+                check[i]=true;
+                permuteHelp(nums,inner,outer,check);
+                //now backtrack and remove from inner array and uncheck it in check array
+                inner.remove(inner.size()-1);
+                check[i]=false;//while backtracking
+            }
+        }
+
+    }
+
+    //approach 2
+    //optimal way without using extra space for boolean array
+    public List<List<Integer>> permute(int[] nums) {
+     List<List<Integer>> outer=new ArrayList<>();
+      permuteHelp2(0,nums,outer);
+     return outer;
+    }
+    public void permuteHelp2(int ind,int[] nums,List<List<Integer>> outer){
+        int n=nums.length;
+        //base case
+        if(ind==n){
+            ArrayList<Integer> inner=new ArrayList<>();
+            //add elements in inner list
+            for(int i=0;i<n;i++){
+                inner.add(nums[i]);
+            }
+            outer.add(new ArrayList<>(inner));
+            return;
+        }
+        for(int i=ind;i<n;i++){
+            //swap a[ind] and a[i]
+            int temp=nums[ind];
+            nums[ind]=nums[i];
+            nums[i]=temp;
+            permuteHelp2(ind+1,nums,outer);
+            //swap again
+            //backtracking
+             int temp2=nums[ind];
+            nums[ind]=nums[i];
+            nums[i]=temp2;
+        }
+        //now move recursion ahead
+
+    }
+    }//main function
